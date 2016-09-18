@@ -1,11 +1,11 @@
 const initialState = {
-    item: 'hello redux'
+    items: []
 };
 
 export default (state = initialState, action) => {
     switch (action.type) {
-        case 'SET_ITEM':
-            return { ...state, item: action.item };
+        case 'GET_ITEMS_SUCCESS':
+            return { ...state, items: action.items };
         default:
             return state;
     }

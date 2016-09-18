@@ -1,8 +1,11 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { createStore } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';
-import HelloComponent from './components/Hello.js';
+
+import thunkMiddleware from 'redux-thunk';
+
+import HelloComponent from './components/Hello';
 import helloReducer from './components/hello-reducer';
 
 
@@ -10,8 +13,14 @@ import helloReducer from './components/hello-reducer';
 const preloadedState = window.__PRELOADED_STATE__;
 
 // Create Redux store with initial state
-const store = createStore(helloReducer, preloadedState);
-
+const store = createStore(
+    helloReducer, 
+    preloadedState,
+    compose(
+        applyMiddleware(thunkMiddleware),
+        window.devToolsExtension ? window.devToolsExtension() : f => f
+    )
+);
 
 render(
     <Provider store={store}>

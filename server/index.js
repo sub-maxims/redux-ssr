@@ -3,14 +3,14 @@ import fs from 'fs';
 import express from 'express';
 import React from 'react';
 import { renderToString } from 'react-dom/server';
-
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
-// import counterApp from './reducers'
-// import App from './containers/App'
+import thunkMiddleware from 'redux-thunk';
 
 import HelloComponent from '../Components/Hello';
 import helloReducer from '../Components/hello-reducer';
+import { getItems } from '../Components/hello-api';
+import fetch from 'isomorphic-fetch';
 
 const publicPath = path.resolve(__dirname, '../views');
 const app = express();
@@ -32,21 +32,26 @@ app.engine('tpl', function (filePath, options, callback) {
 });
 app.set('views', publicPath); 
 app.set('view engine', 'tpl');
-
 app.get('/', (req, res) => {
-    // Create a new Redux store instance
-    const store = createStore(helloReducer);
-    const bodycomp = renderToString(
-        <Provider store={store}>
-            <HelloComponent />
-        </Provider>
-    );
-    // Grab the initial state from our Redux store
-    const preloadedState = JSON.stringify(store.getState());
+    getItems().then(data => {
+        const preloadedState = {
+            items: data
+        };
+        const store = createStore(
+            helloReducer, 
+            preloadedState,
+            applyMiddleware(thunkMiddleware)
+        );
+        const bodycomp = renderToString(
+            <Provider store={store}>
+                <HelloComponent />
+            </Provider>
+        );
+        const initialReduxState = JSON.stringify(store.getState());
 
-    res.render('index', {title: 'server side React', body: bodycomp, preloadedState: preloadedState});
+        res.render('index', {title: 'server side React', body: bodycomp, preloadedState: initialReduxState});
+    });
 });
-
 app.listen(port, () => {
     console.log(port);
 });
