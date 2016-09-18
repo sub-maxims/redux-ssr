@@ -6,10 +6,9 @@ import { renderToString } from 'react-dom/server';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import thunkMiddleware from 'redux-thunk';
-
-import HelloComponent from '../Components/Hello';
-import helloReducer from '../Components/hello-reducer';
-import { getItems } from '../Components/hello-api';
+import PopularContainer from '../Components/PopularContainer';
+import popularReducer from '../Components/popular-reducer';
+import { getItems } from '../Components/popular-api';
 import fetch from 'isomorphic-fetch';
 
 const publicPath = path.resolve(__dirname, '../views');
@@ -38,13 +37,13 @@ app.get('/', (req, res) => {
             items: data
         };
         const store = createStore(
-            helloReducer, 
+            popularReducer, 
             preloadedState,
             applyMiddleware(thunkMiddleware)
         );
         const bodycomp = renderToString(
             <Provider store={store}>
-                <HelloComponent />
+                <PopularContainer />
             </Provider>
         );
         const initialReduxState = JSON.stringify(store.getState());

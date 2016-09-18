@@ -1,4 +1,4 @@
-import { getItems } from './hello-api';
+import { getItems } from './popular-api';
 
 const GET_ITEMS_SUCCESS = 'GET_ITEMS_SUCCESS';
 
