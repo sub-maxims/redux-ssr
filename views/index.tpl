@@ -7,6 +7,9 @@
     </head>
     <body>
         <div id="app">#body#</div>
+     <script>
+          window.__PRELOADED_STATE__ = #preloadedState#
+    </script>
     <script src='/bundle.js'></script>
     </body>
 </html>
