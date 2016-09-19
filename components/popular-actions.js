@@ -10,5 +10,5 @@ function getItemsSuccessAction(data) {
 };
 
 export const getItemsAction = () => (dispatch) => {
-    getItems().then(items => dispatch(getItemsSuccessAction(items)));
+    return getItems().then(items => dispatch(getItemsSuccessAction(items)));
 };
